@@ -9,6 +9,111 @@
   <meta property="og:description" content="Identités de marque, supports imprimés et interfaces web.">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#08080a">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <style id="pf-responsive">
+/* ————————————————————————————————————————————————————————————————
+   Couche responsive du portfolio.
+
+   Le document est construit par le moteur Claude Design : presque tous
+   les réglages sont en style inline sur les éléments. On ne peut donc
+   pas les surcharger par des sélecteurs de classe — d'où le ciblage par
+   attribut sur la valeur inline exacte, et le !important qui va avec.
+   Chaque règle vise une valeur relevée dans le document, pas une
+   supposition.
+   ———————————————————————————————————————————————————————————————— */
+
+/* Les images ne débordent jamais de leur colonne. */
+img { max-width: 100%; }
+
+/* ————— sous 900 px : bascule en colonne unique ————— */
+@media (max-width: 900px) {
+
+  /* Le bloc héros. « auto-fit » avec un minimum de 0 ne se replie
+     jamais : les deux colonnes restent côte à côte même à 375 px, chacune
+     écrasée. C'est la cause principale du rendu mobile cassé. */
+  [style*="minmax(0,1fr)"],
+  [style*="minmax(0, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Hauteurs imposées au bloc héros et à son volet image : sur un
+     téléphone elles réservent un vide que rien ne remplit. */
+  [style*="min-height:600px"] { min-height: auto !important; }
+  [style*="min-height:520px"] { min-height: 380px !important; }
+  [style*="min-height:300px"] { min-height: 220px !important; }
+
+  /* Titres et chiffres figés en pixels. */
+  [style*="font-size: 89px"] { font-size: clamp(38px, 12vw, 72px) !important; }
+  [style*="font-size:46px"]  { font-size: clamp(30px, 9vw, 44px)  !important; }
+  [style*="font-size:35px"]  { font-size: clamp(24px, 6.4vw, 34px) !important; }
+  [style*="font-size:32px"]  { font-size: clamp(23px, 6vw, 31px)   !important; }
+
+  /* Les cercles décoratifs du héros débordaient en étroit. */
+  [style*="width:min(96%,560px)"] { width: min(92%, 420px) !important; }
+  [style*="width:min(88%,510px)"] { width: min(84%, 380px) !important; }
+}
+
+/* ————— sous 600 px : téléphone ————— */
+@media (max-width: 600px) {
+
+  /* La barre de navigation défile déjà horizontalement ; on lui rend
+     les bords de l'écran pour que le premier et le dernier onglet ne
+     soient pas collés au cadre. */
+  .navpill {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    scrollbar-width: none;
+  }
+  .navpill::-webkit-scrollbar { display: none; }
+
+  [style*="min-height:520px"] { min-height: 300px !important; }
+  [style*="min-height:300px"] { min-height: 190px !important; }
+
+  /* Respiration intérieure des cartes : les valeurs d'origine sont
+     pensées pour un écran large. */
+  .card [style*="padding:30px 22px"],
+  .card [style*="padding:26px 22px"],
+  .card [style*="padding:26px 24px"],
+  .card [style*="padding:24px 22px"] {
+    padding: 20px 16px !important;
+  }
+
+  /* Le cartouche posé en bas à droite du héros sortait du cadre. */
+  [style*="right:26px"][style*="bottom:26px"] {
+    right: 16px !important;
+    bottom: 16px !important;
+  }
+}
+
+/* ————— très étroit ————— */
+@media (max-width: 380px) {
+  [style*="font-size: 89px"] { font-size: clamp(32px, 13vw, 46px) !important; }
+}
+  </style>
+  <script>
+  /* Le moteur du bundle reconstruit le document au chargement. Si le
+     head est remplacé, la feuille ci-dessus disparaîtrait avec lui : on
+     la remet en place. Trois vérifications suffisent, la dernière bien
+     après le rendu. */
+  (function () {
+    var source = null;
+    function memoriser() {
+      var el = document.getElementById('pf-responsive');
+      if (el) source = el.textContent;
+    }
+    function verifier() {
+      if (!source) { memoriser(); return; }
+      if (document.getElementById('pf-responsive')) return;
+      var s = document.createElement('style');
+      s.id = 'pf-responsive';
+      s.textContent = source;
+      (document.head || document.documentElement).appendChild(s);
+    }
+    memoriser();
+    [600, 2000, 5000].forEach(function (d) { setTimeout(verifier, d); });
+    document.addEventListener('DOMContentLoaded', verifier);
+  })();
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #faf9f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
